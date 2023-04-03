@@ -1,206 +1,421 @@
 
 
-Algorithm: Merge Sort
-
-Code:
-
-#include <iostream>
-using namespace std;
-
-void merge(int arr[], int l, int m, int r) {
-    int n1 = m - l + 1;
-    int n2 = r - m;
-
-    int L[n1], R[n2];
-
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
-
-    int i = 0;
-    int j = 0;
-    int k = l;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-
-void mergeSort(int arr[], int l, int r) {
-    if (l >= r)
-        return;
-
-    int m = l + (r - l) / 2;
-    mergeSort(arr, l, m);
-    mergeSort(arr, m + 1, r);
-    merge(arr, l, m, r);
-}
-
-void printArray(int arr[], int size) {
-    for (int i = 0; i < size; i++)
-        cout << arr[i] << " ";
-    cout << endl;
-}
-
-int main() {
-    int arr[] = { 12, 11, 13, 5, 6, 7 };
-    int arr_size = sizeof(arr) / sizeof(arr[0]);
-
-    cout << "Given array is \n";
-    printArray(arr, arr_size);
-
-    mergeSort(arr, 0, arr_size - 1);
-
-    cout << "\nSorted array is \n";
-    printArray(arr, arr_size);
-    return 0;
-}
-
-Algorithm: Dijkstra's Shortest Path Algorithm
+Algorithm: Dijkstra's Algorithm 
 
 #include<bits/stdc++.h>
 using namespace std;
 
-#define INF 0x3f3f3f3f
+#define pii pair<int,int>
+vector<pii> adj[100005];
+int dist[100005];
 
-typedef pair<int,int> iPair;
+void Dijkstra(int src){
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+    pq.push({0,src});
 
-class Graph
-{
-    int V;
-    list< pair<int,int> > *adj;
-
-    public:
-        Graph(int V);
-        void addEdge(int u,int v,int w);
-        void shortestPath(int s);
-};
-
-Graph::Graph(int V)
-{
-    this->V=V;
-    adj=new list<iPair> [V];
-}
-
-void Graph::addEdge(int u,int v,int w)
-{
-    adj[u].push_back(make_pair(v,w));
-    adj[v].push_back(make_pair(u,w));
-}
-
-void Graph::shortestPath(int src)
-{
-    priority_queue< iPair,vector<iPair>,greater<iPair> > pq;
-    vector<int> dist(V,INF);
-
-    pq.push(make_pair(0,src));
-    dist[src]=0;
-
-    while(!pq.empty())
-    {
+    while(!pq.empty()){
+        int d=pq.top().first;
         int u=pq.top().second;
         pq.pop();
 
-        list<pair<int,int > >::iterator i;
-        for(i=adj[u].begin();i!=adj[u].end();++i)
-        {
-            int v=(*i).first;
-            int weight=(*i).second;
+        if(dist[u]!=-1) continue;
+        dist[u]=d;
 
-            if(dist[v]>dist[u]+weight)
-            {
-                dist[v]=dist[u]+weight;
-                pq.push(make_pair(dist[v],v));
-            }
-
+        for(auto v:adj[u]){
+            if(dist[v.first]!=-1)continue;
+            pq.push({v.second+d,v.first});
         }
     }
-    cout<<"Vertex   Distance from Source"<<endl;
-    for(int i=0;i<V;i++)
-        cout<<i<<"\t\t"<<dist[i]<<endl;
 }
 
-int main()
-{
-
-    Graph g(9);
-
-    g.addEdge(0, 1, 4);
-    g.addEdge(0, 7, 8);
-    g.addEdge(1, 2, 8);
-    g.addEdge(1, 7, 11);
-    g.addEdge(2, 3, 7);
-    g.addEdge(2, 8, 2);
-    g.addEdge(2, 5, 4);
-    g.addEdge(3, 4, 9);
-    g.addEdge(3, 5, 14);
-    g.addEdge(4, 5, 10);
-    g.addEdge(5, 6, 2);
-    g.addEdge(6, 7, 1);
-    g.addEdge(6, 8, 6);
-    g.addEdge(7, 8, 7);
-
-    g.shortestPath(0);
-
+int main(){
+    memset(dist,-1,sizeof dist);
+    //Add edges and weights to the graph
+    int src=1;
+    Dijkstra(src);
+    //Output shortest distance from vertex src to all other vertices
     return 0;
 }
 
-Algorithm: Binary Search
+Quick Sort:
 
-int binarySearch(vector<int> arr, int l, int r, int x) {
-   if (r >= l) {
-      int mid = l + (r - l)/2;
-      if (arr[mid] == x)
-         return mid;
-      if (arr[mid] > x)
-         return binarySearch(arr, l, mid-1, x);
-      return binarySearch(arr, mid+1, r, x);
-   }
-   return -1;
-}
-
-Name: Merge Sort Algorithm
-
-Code:
-
-#include <iostream>
+```
+#include<iostream>
 using namespace std;
 
-void merge(int arr[], int l, int m, int r) {
-    int i, j, k;
-    int n1 = m - l + 1;
-    int n2 = r - m;
+int Partition(int A[], int start, int end){
+    int pivot=A[end];
+    int partitionIndex=start;
+    for(int i=start;i<end;i++){
+        if(A[i]<=pivot){
+            swap(A[i],A[partitionIndex]);
+            partitionIndex++;
+        }
+    }
+    swap(A[partitionIndex],A[end]);
+    return partitionIndex;
+}
 
-    int L[n1], R[n2];
-    
-    for (i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (j = 0; j < n2; j++)
-        R[j] = arr[m + 1+ j];
+void QuickSort(int A[], int start, int end){
+    if(start<end){
+        int partitionIndex=Partition(A,start,end);
+        QuickSort(A,start,partitionIndex-1);
+        QuickSort(A,partitionIndex+1,end);
+    }
+}
+
+int main(){
+    int A[]={7,6,5,4,3,2,1,0};
+    int n=sizeof(A)/sizeof(A[0]);
+    QuickSort(A,0,n-1);
+    for(int i=0;i<n;i++)
+        cout<<A[i]<<" ";
+    return 0;
+}
+```
+
+Algorithm: Dijkstra's Algorithm 
+
+#include<bits/stdc++.h> 
+using namespace std; 
+
+typedef pair<int,int> pii; 
+
+const int INF=1e9; 
+const int MAXN=1005; 
+
+int n,m,s; 
+int dist[MAXN]={0}; 
+bool vis[MAXN]={false}; 
+int G[MAXN][MAXN]; 
+
+void Dijkstra(){ 
+    fill(dist,dist+n+1,INF); 
+    dist[s]=0; 
+    priority_queue<pii,vector<pii>,greater<pii>> pq; 
+    pq.push(make_pair(0,s)); 
+    while(!pq.empty()){ 
+        int u=pq.top().second; 
+        pq.pop(); 
+        if(vis[u]){ 
+            continue; 
+        } 
+        vis[u]=true; 
+        for(int v=1;v<=n;v++){ 
+            if(!vis[v]&&G[u][v]>0&&dist[u]+G[u][v]<dist[v]){ 
+                dist[v]=dist[u]+G[u][v]; 
+                pq.push(make_pair(dist[v],v)); 
+            } 
+        } 
+    } 
+} 
+
+int main(){ 
+    scanf("%d%d%d",&n,&m,&s); 
+    for(int i=0;i<=n;i++){ 
+        for(int j=0;j<=n;j++){ 
+            G[i][j]=INF; 
+        } 
+    } 
+    for(int i=1;i<=m;i++){ 
+        int u,v,w; 
+        scanf("%d%d%d",&u,&v,&w); 
+        G[u][v]=w; 
+    } 
+    Dijkstra(); 
+    for(int i=1;i<=n;i++){ 
+        printf("%d ",dist[i]); 
+    } 
+    return 0; 
+} 
+
+// Sample Input: 
+// 3 3 1 
+// 1 2 2 
+// 2 3 3 
+// 3 1 4 
+
+// Sample Output: 
+// 0 2 5
+
+Algorithm: Merge Sort 
+
+Code: 
+
+#include <iostream> 
+#include <vector> 
+
+void mergeSort(std::vector<int>& arr, int l, int r); 
+void merge(std::vector<int>& arr, int l, int m, int r); 
+
+int main() { 
+    std::vector<int> arr {8, 5, 3, 1, 9, 6, 0, 7, 4, 2}; 
+
+    mergeSort(arr, 0, arr.size() - 1); 
+
+    for (int num : arr) { 
+        std::cout << num << " "; 
+    } 
+    std::cout << std::endl; 
+
+    return 0; 
+} 
+
+void mergeSort(std::vector<int>& arr, int l, int r) { 
+    if (l < r) { 
+        int m = (l + r) / 2; 
+
+        mergeSort(arr, l, m); 
+        mergeSort(arr, m+1, r); 
+
+        merge(arr, l, m, r); 
+    } 
+} 
+
+void merge(std::vector<int>& arr, int l, int m, int r) { 
+    int i, j, k; 
+    int n1 = m - l + 1; 
+    int n2 = r - m; 
+
+    std::vector<int> L(n1); 
+    std::vector<int> R(n2); 
+
+    for (i = 0; i < n1; i++) { 
+        L[i] = arr[l + i]; 
+    } 
+    for (j = 0; j < n2; j++) { 
+        R[j] = arr[m + 1 + j]; 
+    } 
 
     i = 0; 
     j = 0; 
     k = l; 
+
+    while (i < n1 && j < n2) { 
+        if (L[i] <= R[j]) { 
+            arr[k] = L[i]; 
+            i++; 
+        } else { 
+            arr[k] = R[j]; 
+            j++; 
+        } 
+        k++; 
+    } 
+
+    while (i < n1) { 
+        arr[k] = L[i]; 
+        i++; 
+        k++; 
+    } 
+
+    while (j < n2) { 
+        arr[k] = R[j]; 
+        j++; 
+        k++; 
+    } 
+}
+
+One interesting algorithm that a third year university student could implement to sharpen their skills is the Knapsack Problem. 
+
+Here is an implementation in C++:
+
+#include <iostream> 
+using namespace std; 
+
+int max(int a, int b) { return (a > b) ? a : b; }  
+
+int knapSack(int W, int wt[], int val[], int n)  
+{  
+    if (n == 0 || W == 0)  
+        return 0;  
+
+    if (wt[n-1] > W)  
+        return knapSack(W, wt, val, n-1);  
+  
+    else return max( val[n-1] + knapSack(W-wt[n-1], wt, val, n-1), knapSack(W, wt, val, n-1) );  
+}  
+  
+int main()  
+{  
+    int val[] = {60, 100, 120};  
+    int wt[] = {10, 20, 30};  
+    int W = 50;  
+    int n = sizeof(val)/sizeof(val[0]);  
+    cout<< knapSack(W, wt, val, n);  
+    return 0;  
+}  
+
+Output: 220
+
+Algorithm: Dijkstra's Algorithm
+
+Code:
+
+#include<bits/stdc++.h>
+using namespace std;
+#define pii pair<int,int>
+#define pb push_back
+const int N=1e5+5;
+int n,m,x,y,c,dis[N];
+bool vis[N];
+vector<pii> g[N];
+priority_queue< pii,vector<pii>,greater<pii> > q;
+void dijkstra(int s)
+{
+    for(int i=0;i<=n;i++) dis[i]=1e9+5; //initializes the distances to infinity
+    dis[s]=0;
+    q.push({0,s});
+    while(!q.empty())
+    {
+        x=q.top().second;
+        q.pop();
+        if(vis[x]) continue;
+        vis[x]=true;
+        for(int i=0;i<g[x].size();i++)
+        {
+            y=g[x][i].first;
+            c=g[x][i].second;
+            if(dis[y]>dis[x]+c)
+            {
+                dis[y]=dis[x]+c;
+                q.push({dis[y],y});
+            }
+        }
+    }
+}
+int main()
+{
+    cin>>n>>m;
+    for(int i=1;i<=m;i++)
+    {
+        cin>>x>>y>>c;
+        g[x].pb({y,c});
+        g[y].pb({x,c}); //comment these two lines for directed graph
+    }
+    dijkstra(1);
+    for(int i=1;i<=n;i++) cout<<dis[i]<<" ";
+    return 0;
+}
+
+Here's an example of a code snippet implementing the Bubble Sort algorithm: 
+
+```
+#include <iostream>
+using namespace std;
+
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-i-1; j++) {
+            if (arr[j] > arr[j+1]) {
+                swap(arr[j], arr[j+1]);
+            }
+        }
+    }
+}
+
+int main() {
+    int arr[] = {64, 25, 12, 22, 11};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    bubbleSort(arr, n);
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    return 0;
+}
+``` 
+
+This code implements the Bubble Sort algorithm to sort an array of integers in ascending order. The main function declares an array of integers and calls the bubbleSort function to sort the array. The bubbleSort function implements the nested for-loops to compare adjacent elements in the array and swap them if the left element is greater than the right element. The sorted array is outputted at the end of the program.
+
+
+Algorithm: Kosaraju's algorithm for finding strongly connected components in a directed graph.
+
+Code:
+
+#include<bits/stdc++.h>
+using namespace std;
+
+void dfs1(vector<int> graph[], int u, vector<bool> &visited, stack<int> &st){
+    visited[u] = true;
+    for(int v : graph[u]){
+        if(!visited[v]){
+            dfs1(graph, v, visited, st);
+        }
+    }
+    st.push(u);
+}
+
+void dfs2(vector<int> reverse_graph[], int u, vector<bool> &visited){
+    visited[u] = true;
+    cout<<u<<" ";
+    for(int v : reverse_graph[u]){
+        if(!visited[v]){
+            dfs2(reverse_graph, v, visited);
+        }
+    }
+}
+
+void kosarajuSCC(vector<int> graph[], vector<int> reverse_graph[], int n){
+    vector<bool> visited(n, false);
+    stack<int> st;
+
+    for(int i=0;i<n;i++){
+        if(!visited[i]){
+            dfs1(graph, i, visited, st);
+        }
+    }
+
+    visited = vector<bool>(n, false);
+    while(!st.empty()){
+        int u = st.top();
+        st.pop();
+        if(!visited[u]){
+            dfs2(reverse_graph, u, visited);
+            cout<<"\n";
+        }
+    }
+}
+
+int main(){
+    int n, m;
+    cin>>n>>m;
+
+    vector<int> graph[n], reverse_graph[n];
+
+    for(int i=0;i<m;i++){
+        int u, v;
+        cin>>u>>v;
+        graph[u].push_back(v);
+        reverse_graph[v].push_back(u);
+    }
+
+    kosarajuSCC(graph, reverse_graph, n);
+
+    return 0;
+}
+
+One interesting algorithm that a third year university student could implement is the Merge Sort algorithm. Here's an example C++ code snippet:
+
+```
+#include <iostream>
+using namespace std;
+
+void merge(int arr[], int left, int middle, int right) {
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+
+    int L[n1], R[n2];
+
+    for (int i = 0; i < n1; i++) {
+        L[i] = arr[left + i];
+    }
+
+    for (int j = 0; j < n2; j++) {
+        R[j] = arr[middle + 1 + j];
+    }
+
+    int i = 0, j = 0, k = left;
+
     while (i < n1 && j < n2) {
         if (L[i] <= R[j]) {
             arr[k] = L[i];
@@ -226,210 +441,64 @@ void merge(int arr[], int l, int m, int r) {
     }
 }
 
-void mergeSort(int arr[], int l, int r) {
-    if (l < r) {
-        int m = l+(r-l)/2;
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        int middle = left + (right - left) / 2;
 
-        mergeSort(arr, l, m);
-        mergeSort(arr, m+1, r);
+        mergeSort(arr, left, middle);
+        mergeSort(arr, middle + 1, right);
 
-        merge(arr, l, m, r);
+        merge(arr, left, middle, right);
     }
-}
-
-int main() 
-{
-    int arr[] = { 12, 11, 13, 5, 6, 7 };
-    int arr_size = sizeof(arr)/sizeof(arr[0]);
-
-    cout << "Given array is \n";
-    for (int i = 0; i < arr_size; i++)
-        cout << arr[i] << " ";
-
-    mergeSort(arr, 0, arr_size - 1);
-
-    cout << "\nSorted array is \n";
-    for (int i = 0; i < arr_size; i++)
-        cout << arr[i] << " ";
-
-    return 0;
-}
-
-
-
-
-One interesting algorithm that a third year university student could implement to sharpen their skills is the QuickSort algorithm. 
-
-Here is an example code snippet in C++:
-
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-void quickSort(vector<int>& arr, int low, int high) {
-  if (low < high) {
-    int pivot = arr[(low+high)/2];
-    int i = low - 1;
-    int j = high + 1;
-    while (true) {
-      do {
-        i++;
-      } while (arr[i] < pivot);
-      do {
-        j--;
-      } while (arr[j] > pivot);
-      if (i >= j) {
-        break;
-      }
-      swap(arr[i], arr[j]);
-    }
-    quickSort(arr, low, j);
-    quickSort(arr, j+1, high);
-  }
 }
 
 int main() {
-  vector<int> arr = {3, 1, 5, 2, 7, 4};
-  quickSort(arr, 0, arr.size()-1);
-  for (int i = 0; i < arr.size(); i++) {
-    cout << arr[i] << " ";
-  }
-  cout << endl;
-  return 0;
-} 
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int arr_size = sizeof(arr)/sizeof(arr[0]);
 
-This code takes an input vector of integers, and uses the QuickSort algorithm to sort the elements in non-decreasing order. The algorithm works by selecting a pivot element (in this case, we choose the middle element of the array), and partitioning the elements around it such that elements less than the pivot come before it, and elements greater than the pivot come after it. This process is repeated recursively on the two subarrays created by the partition until they are sorted.
-
-Algorithm: Floyd-Warshall algorithm 
-
-Code: 
-
-#include<bits/stdc++.h>
-#define ll long long 
-#define N 510
-using namespace std;
-const ll inf=1ll<<60;
-ll n,m,dis[N][N],ans;
-int main(){
-    scanf("%lld%lld",&n,&m);
-    for(int i=1;i<=n;i++)
-        for(int j=1;j<=n;j++)
-            dis[i][j]=i==j?0:inf;
-    for(int i=1,u,v,w;i<=m;i++){
-        scanf("%d%d%d",&u,&v,&w);
-        dis[u][v]=min(dis[u][v],1ll*w);
+    cout << "Original Array: ";
+    for (int i = 0; i < arr_size; i++) {
+        cout << arr[i] << " ";
     }
-    for(int k=1;k<=n;k++)
-        for(int i=1;i<=n;i++)
-            for(int j=1;j<=n;j++)
-                dis[i][j]=min(dis[i][j],dis[i][k]+dis[k][j]);
-    for(int i=1;i<=n;i++)
-        for(int j=1;j<=n;j++)
-            ans+=dis[i][j]<inf?dis[i][j]:0;
-    printf("%lld\n",ans);
+    cout << endl;
+
+    mergeSort(arr, 0, arr_size - 1);
+
+    cout << "Sorted Array: ";
+    for (int i = 0; i < arr_size; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
     return 0;
 }
+```Algorithm: Sieve of Eratosthenes
 
+Code:
 
-
-Quick Sort: 
-
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
-int partition(int arr[], int low, int high)
-{
-    int pivot = arr[high];    
-    int i = (low - 1);  
-    for (int j = low; j <= high- 1; j++)
-    {
-        if (arr[j] <= pivot)
-        {
-            i++;    
-            swap(arr[i], arr[j]);
+void sieve(int n) {
+    vector<bool> primes(n+1, true);
+
+    for(int p=2; p*p<=n; p++) {
+        if(primes[p] == true) {
+            for(int i=p*p; i<=n; i+=p)
+                primes[i] = false;
         }
     }
-    swap(arr[i + 1], arr[high]);
-    return (i + 1);
-}
 
-void quickSort(int arr[], int low, int high)
-{
-    if (low < high)
-    {
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
+    for(int p=2; p<=n; p++) {
+        if(primes[p])
+            cout << p << " ";
     }
 }
 
-int main()
-{
-    int arr[] = {10, 7, 8, 9, 1, 5};  
-    int n = sizeof(arr)/sizeof(arr[0]);
-    quickSort(arr, 0, n-1);
-    cout<<"Sorted array: \n";
-    for (int i = 0; i < n; i++)
-        cout<<arr[i]<<" ";
+int main() {
+    int n = 30;
+    cout << "Prime numbers smaller than or equal to " << n << ":\n";
+    sieve(n);
     return 0;
-}
-
-Algorithm: Prim's Minimum Spanning Tree
-
-void primMST(int graph[V][V]) 
-{ 
-    int parent[V]; 
-    int key[V]; 
-    bool mstSet[V]; 
-
-    for (int i = 0; i < V; i++) 
-    { 
-        key[i] = INT_MAX; 
-        mstSet[i] = false; 
-    } 
-  
-    key[0] = 0;     
-    parent[0] = -1;  
-
-    for (int count = 0; count < V - 1; count++) 
-    { 
-        
-        int u = minKey(key, mstSet); 
-
-        mstSet[u] = true; 
-
-        for (int v = 0; v < V; v++) 
-
-            if (graph[u][v] && mstSet[v] == false && 
-                graph[u][v] < key[v]) 
-            { 
-                parent[v] = u; 
-                key[v] = graph[u][v]; 
-            } 
-    } 
-} 
-
-
-Algorithm: QuickSort
-
-void quickSort(int arr[], int low, int high) {
-    if (low < high) {
-        int pivot = arr[high];
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (arr[j] < pivot) {
-                i++;
-                int temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
-        }
-        int temp = arr[i + 1];
-        arr[i + 1] = arr[high];
-        arr[high] = temp;
-        int pi = i + 1;
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-    }
 }
