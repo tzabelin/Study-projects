@@ -989,3 +989,6 @@ int main()
 Knapsack Problem Algorithm: 
 
 #include<i
+
+//Quick Sort Algorithm
+#include <iostream>
