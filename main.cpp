@@ -992,3 +992,8 @@ Knapsack Problem Algorithm:
 
 //Quick Sort Algorithm
 #include <iostream>
+
+
+Knuth-Morris-Pratt Algorithm:
+
+#
