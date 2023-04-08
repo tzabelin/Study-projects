@@ -617,4 +617,55 @@ int main() {
         cout << arr[i] << " ";
 
     return 0;
+}Algorithm: Dijkstra's Algorithm
+
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+#define INF 0x3f3f3f3f 
+
+typedef pair<int, int> pii;
+
+vector<pair<int, int>> adj[100001];
+int dist[100001];
+
+void dijkstra(int s) {
+    memset(dist, INF, sizeof(dist));
+    dist[s] = 0;
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+    pq.push(make_pair(0, s));
+
+    while(!pq.empty()) {
+        int u = pq.top().second;
+        pq.pop();
+        for(auto v : adj[u]) {
+            int w = v.first, weight = v.second;
+            if(dist[u] + weight < dist[w]) {
+                dist[w] = dist[u] + weight;
+                pq.push(make_pair(dist[w], w));
+            }
+        }
+    }
+}
+
+int main() {
+    int n, m, s;
+    cin >> n >> m >> s;
+
+    for(int i=0; i<m; i++) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj[u].push_back(make_pair(v, w));
+        adj[v].push_back(make_pair(u, w)); // If graph is undirected
+    }
+
+    dijkstra(s);
+
+    for(int i=1; i<=n; i++) {
+        cout << "Distance from " << s << " to " << i << " is " << dist[i] << endl;
+    }
+
+    return 0;
 }
