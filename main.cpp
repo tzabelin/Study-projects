@@ -984,3 +984,8 @@ Algorithm: Insertion Sort
 
 Implementation of Selection Sort Algorithm:
 int main() 
+
+
+Knapsack Problem Algorithm: 
+
+#include<i
