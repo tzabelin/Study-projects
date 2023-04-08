@@ -978,3 +978,6 @@ int main()
 Algorithm: Insertion Sort
 
 #include <iostream
+
+// Knapsack problem 
+#include <bits/stdc
