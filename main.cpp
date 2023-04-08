@@ -974,3 +974,7 @@ int main()
 
     return 0;
 }
+
+Algorithm: Insertion Sort
+
+#include <iostream
