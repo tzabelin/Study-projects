@@ -947,4 +947,30 @@ int main()
     cout << "Sorted array: \n";
     printArray(arr, n);
     return 0;
+}Algorithm: Sieve of Eratosthenes
+
+Code:
+
+#include <iostream>
+#include <bitset>
+
+using namespace std;
+
+int main()
+{
+    const int N = 1000000;
+    bitset<N+1> prime;
+    prime.set();
+    prime[0] = prime[1] = false;
+
+    for(int i=2;i*i<=N;++i)
+        if(prime[i])
+            for(int j=i*i;j<=N;j+=i)
+                prime[j] = false;
+
+    for(int i=1;i<=N;++i)
+        if(prime[i])
+            cout << i << " ";
+
+    return 0;
 }
